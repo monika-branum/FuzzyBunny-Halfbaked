@@ -26,6 +26,11 @@ export async function deleteBunny(id) {
 }
 
 export async function createBunny(bunny) {
+    const response = await client
+        .from('fuzzy_bunnies')
+        .insert({ bunny, user_id: client.auth.session().user.id });
+
+    return checkError(response);
     // create a bunny using the bunny argument
     // return checkError(response);
 }
