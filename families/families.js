@@ -9,7 +9,9 @@ logoutButton.addEventListener('click', () => {
     logout();
 });
 
-function displayFamilies() {
+function displayFamilies(families) {
+    familiesEl.textContent = '';
+    //why not a separate render file? bc youre calling bunnies from each fam
     // fetch families from supabase
     // clear out the familiesEl
     // loop through each family and for each family:
@@ -22,6 +24,37 @@ function displayFamilies() {
     //        <div class="bunny">Bob</div>
     //    </div>
     // </div>
+
+    for (let family of families) {
+        const familyDiv = document.createElement('section');
+        const familyName = document.createElement('h2');
+        const bunnyDiv = document.createElement('div');
+
+        bunnyDiv.classList.add('bunnies');
+        familyDiv.classList.add('family');
+
+        familyName.textContent = family.name;
+
+        for (let bunny of family.fuzzy_bunnies) {
+            const bunnyEl = document.createElement('div');
+
+            bunnyEl.classList.add('bunny');
+            bunnyEl.textContent = bunny.name;
+
+            bunnyEl.addEventListener('click', async () => {
+                await deleteBunny(bunny.id);
+
+                const updatedFamilies = await getFamilies();
+
+                displayFamilies(updatedFamilies);
+            });
+
+            bunnyDiv.append(bunnyEl);
+        }
+
+        familyDiv.append(familyName, bunnyDiv);
+        familiesEl.append(familyDiv);
+    }
     // add the bunnies css class to the bunnies el, and family css class to the family el
     // put the family name in the name element
     // for each of this family's bunnies
