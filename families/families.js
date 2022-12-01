@@ -41,7 +41,13 @@ function displayFamilies(families) {
             bunnyEl.classList.add('bunny');
             bunnyEl.textContent = bunny.name;
 
-            // bunnyEl.addEventListener('click');
+            bunnyEl.addEventListener('click', async () => {
+                await deleteBunny(bunny.id);
+
+                const updatedFamilies = await getFamilies();
+
+                displayFamilies(updatedFamilies);
+            });
 
             bunnyDiv.append(bunnyEl);
         }
